@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rescue Educational Initiative</title>
+<meta name="description" content="Sponsor a student in Gaza. Rescue a future. Support high school students with just $20 per month.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          night: '#06110d',
+          deep:  '#0b1f18',
+          brand: { DEFAULT:'#10b981', dark:'#047857', soft:'#ecfdf5' },
+          lime:  '#c6f432',
+          coral: '#ff5a4e',
+          sand:  '#f5f3ee',
+          muted: '#64716b',
+        },
+        fontFamily: {
+          sans: ['"Plus Jakarta Sans"','Cairo','system-ui','sans-serif'],
+          ar:   ['Cairo','system-ui','sans-serif'],
+        },
+        keyframes: {
+          marquee: { from:{ transform:'translateX(0)' }, to:{ transform:'translateX(-50%)' } },
+          float:   { '0%,100%':{ transform:'translateY(0)' }, '50%':{ transform:'translateY(-10px)' } },
+          blob:    { '0%,100%':{ transform:'translate(0,0) scale(1)' }, '50%':{ transform:'translate(30px,-20px) scale(1.1)' } },
+        },
+        animation: {
+          marquee: 'marquee 35s linear infinite',
+          float:   'float 6s ease-in-out infinite',
+          blob:    'blob 14s ease-in-out infinite',
+        },
+      }
+    }
+  }
+</script>
+<style>
+  html[lang="ar"] body { font-family: 'Cairo', system-ui, sans-serif; }
+  html[lang="ar"] .tracking-tight, html[lang="ar"] .tracking-tighter { letter-spacing: 0; }
+  html[lang="ar"] .uppercase { letter-spacing: 0; }
+  html[dir="rtl"] .animate-marquee { animation-direction: reverse; }
+  .grain::before { content:""; position:absolute; inset:0; pointer-events:none; opacity:.06;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .reveal { opacity:0; transform:translateY(28px); transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+  .reveal.in { opacity:1; transform:none; }
+  .tier.active { background:#06110d; color:#fff; border-color:#06110d; transform:translateY(-4px); box-shadow:0 20px 40px -12px rgba(6,17,13,.45); }
+  .tier.active .t-muted { color:rgba(255,255,255,.6); }
+  .tier.active .t-amount { color:#c6f432; }
+  .nav-solid { background:rgba(255,255,255,.75); border-color:rgba(0,0,0,.06)!important; box-shadow:0 10px 30px -10px rgba(0,0,0,.15); }
+  .nav-solid .nav-text { color:#06110d; }
+  .nav-solid .lang-btn { background:#06110d; color:#fff; }
+  .text-gradient { background:linear-gradient(90deg,#c6f432,#10b981); -webkit-background-clip:text; background-clip:text; color:transparent; }
+</style>
+</head>
+<body class="font-sans bg-sand text-night antialiased overflow-x-hidden">
+
+<!-- ================= NAV (floating pill) ================= -->
+<header class="fixed top-4 inset-x-0 z-50 px-4">
+  <nav id="nav" class="max-w-6xl mx-auto flex items-center justify-between gap-3 rounded-full border border-white/10 bg-white/5 backdrop-blur-xl ps-3 pe-2 py-2 transition-all duration-300">
+    <a href="#top" class="nav-text flex items-center gap-2.5 font-extrabold text-white">
+      <span class="w-9 h-9 rounded-full bg-lime grid place-items-center shrink-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06110d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
+      </span>
+      <span data-i18n="brand">Rescue</span>
+    </a>
+    <ul id="navLinks" class="hidden lg:flex items-center gap-1 lg:static absolute top-[68px] inset-x-4 flex-col lg:flex-row bg-white lg:bg-transparent rounded-3xl lg:rounded-none p-3 lg:p-0 shadow-2xl lg:shadow-none">
+      <li><a href="#about" class="nav-text block px-4 py-2 rounded-full text-night lg:text-white/80 hover:bg-black/5 lg:hover:bg-white/10 text-sm font-semibold transition" data-i18n="nav_about">About</a></li>
+      <li><a href="#phase" class="nav-text block px-4 py-2 rounded-full text-night lg:text-white/80 hover:bg-black/5 lg:hover:bg-white/10 text-sm font-semibold transition" data-i18n="nav_phase">First Phase</a></li>
+      <li><a href="#gallery" class="nav-text block px-4 py-2 rounded-full text-night lg:text-white/80 hover:bg-black/5 lg:hover:bg-white/10 text-sm font-semibold transition" data-i18n="nav_gallery">Gallery</a></li>
+      <li><a href="#contribute" class="nav-text block px-4 py-2 rounded-full text-night lg:text-white/80 hover:bg-black/5 lg:hover:bg-white/10 text-sm font-semibold transition" data-i18n="nav_contribute">Contribute</a></li>
+      <li><a href="#contact" class="nav-text block px-4 py-2 rounded-full text-night lg:text-white/80 hover:bg-black/5 lg:hover:bg-white/10 text-sm font-semibold transition" data-i18n="nav_contact">Contact</a></li>
+    </ul>
+    <div class="flex items-center gap-2">
+      <button id="langBtn" class="lang-btn font-ar font-bold text-sm bg-white/10 text-white rounded-full px-4 py-2 transition hover:opacity-80">العربية</button>
+      <a href="#donate" class="hidden sm:inline-flex items-center gap-1.5 bg-lime text-night font-bold text-sm rounded-full px-5 py-2 transition hover:scale-[1.03]">
+        <span data-i18n="nav_donate">Donate</span>
+        <svg class="rtl:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <button id="menuBtn" class="nav-text lg:hidden text-white p-2" aria-label="Menu">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+    </div>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<section id="top" class="grain relative bg-night text-white overflow-hidden pt-36 pb-24 lg:pt-44 lg:pb-32">
+  <div class="absolute -top-40 -start-40 w-[520px] h-[520px] rounded-full bg-brand/30 blur-[120px] animate-blob"></div>
+  <div class="absolute top-40 -end-40 w-[460px] h-[460px] rounded-full bg-lime/20 blur-[120px] animate-blob [animation-delay:-7s]"></div>
+
+  <div class="relative max-w-6xl mx-auto px-4 grid lg:grid-cols-[1.15fr_1fr] gap-14 items-center">
+    <div>
+      <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-semibold mb-7">
+        <span class="relative flex w-2 h-2"><span class="absolute inset-0 rounded-full bg-lime animate-ping opacity-70"></span><span class="relative w-2 h-2 rounded-full bg-lime"></span></span>
+        <span data-i18n="hero_tag">Rescue Educational Initiative · Gaza</span>
+      </div>
+      <h1 class="text-[2.6rem] leading-[1.05] sm:text-6xl lg:text-7xl font-extrabold tracking-tighter mb-6" data-i18n-html="hero_title"></h1>
+      <p class="text-lg text-white/70 max-w-xl mb-9" data-i18n="hero_p1"></p>
+      <div class="flex flex-wrap items-center gap-3">
+        <a href="#donate" class="group inline-flex items-center gap-2 bg-lime text-night font-bold rounded-full ps-6 pe-2 py-2 transition hover:scale-[1.02]">
+          <span data-i18n="cta_sponsor">Sponsor a Student</span>
+          <span class="w-10 h-10 rounded-full bg-night text-lime grid place-items-center transition group-hover:rotate-[-45deg] rtl:group-hover:rotate-[-135deg] rtl:rotate-180">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+        <a href="#about" class="inline-flex items-center rounded-full border border-white/20 px-6 py-4 font-semibold hover:bg-white/10 transition" data-i18n="cta_learn">Learn More</a>
+      </div>
+      <div class="mt-12 inline-flex items-center gap-4 rounded-2xl bg-white/5 border border-white/10 p-3 pe-5">
+        <div class="text-3xl font-extrabold text-lime">$20</div>
+        <div class="text-sm text-white/70 leading-snug" data-i18n="hero_price">Support one student per month</div>
+      </div>
+    </div>
+
+    <!-- Collage -->
+    <div class="relative h-[460px] sm:h-[540px]">
+      <div class="absolute inset-y-0 start-0 w-[68%] rounded-[2rem] overflow-hidden ring-1 ring-white/10">
+        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM.jpeg" alt="Volunteer teacher explaining a lesson in Gaza" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-night/70 via-transparent"></div>
+        <div class="absolute bottom-4 start-4 end-4 flex items-center gap-2 text-xs font-semibold">
+          <span class="rounded-full bg-white/15 backdrop-blur px-3 py-1.5" data-i18n="hero_real">📍 Real classroom · Gaza</span>
+        </div>
+      </div>
+      <div class="absolute top-6 end-0 w-[42%] h-[44%] rounded-[1.6rem] overflow-hidden ring-4 ring-night animate-float">
+        <img src="image/stock/books-apple.jpg" alt="" class="w-full h-full object-cover">
+      </div>
+      <div class="absolute bottom-0 end-0 w-[42%] rounded-[1.6rem] bg-lime text-night p-5 animate-float [animation-delay:-3s]">
+        <div class="text-4xl font-extrabold tracking-tight"><span class="counter" data-to="160">0</span></div>
+        <div class="text-sm font-semibold leading-snug" data-i18n="stat_students">High school students</div>
+        <div class="mt-3 h-1.5 rounded-full bg-night/15 overflow-hidden"><div class="h-full w-2/3 bg-night rounded-full"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- stats row -->
+  <div class="relative max-w-6xl mx-auto px-4 mt-20 grid grid-cols-2 md:grid-cols-4 gap-px rounded-3xl overflow-hidden bg-white/10">
+    <div class="bg-night/90 p-6"><div class="text-3xl md:text-4xl font-extrabold"><span class="counter" data-to="160">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_students">High school students</div></div>
+    <div class="bg-night/90 p-6"><div class="text-3xl md:text-4xl font-extrabold"><span class="counter" data-to="4">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_months">Months — first phase</div></div>
+    <div class="bg-night/90 p-6"><div class="text-3xl md:text-4xl font-extrabold">$<span class="counter" data-to="20">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_cost">Per student / month</div></div>
+    <div class="bg-night/90 p-6"><div class="text-3xl md:text-4xl font-extrabold text-lime">$<span class="counter" data-to="12800">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_goal">Total funding goal</div></div>
+  </div>
+</section>
+
+<!-- ================= MARQUEE ================= -->
+<div class="bg-lime text-night py-4 overflow-hidden -rotate-1 -mt-3 relative z-10 border-y-2 border-night">
+  <div id="marquee" class="flex w-max animate-marquee gap-10 text-xl md:text-2xl font-extrabold whitespace-nowrap"></div>
+</div>
+
+<!-- ================= ABOUT (bento) ================= -->
+<section id="about" class="py-24 md:py-32">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="reveal flex flex-wrap items-end justify-between gap-6 mb-12">
+      <div>
+        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-brand-dark mb-4"><span class="w-6 h-px bg-brand-dark"></span><span data-i18n="about_eyebrow">About the Initiative</span></span>
+        <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight max-w-2xl" data-i18n="about_title"></h2>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-6 gap-4 auto-rows-[minmax(180px,auto)]">
+      <div class="reveal md:col-span-4 md:row-span-2 rounded-[2rem] bg-white p-8 md:p-10 flex flex-col justify-between gap-8">
+        <div class="space-y-4 text-lg text-muted">
+          <p data-i18n-html="about_p1"></p>
+          <p data-i18n="about_p2"></p>
+          <p data-i18n="about_p3"></p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <span class="rounded-full bg-sand px-4 py-2 text-sm font-semibold" data-i18n="tag1">Free lessons</span>
+          <span class="rounded-full bg-sand px-4 py-2 text-sm font-semibold" data-i18n="tag2">Revision sessions</span>
+          <span class="rounded-full bg-sand px-4 py-2 text-sm font-semibold" data-i18n="tag3">Exam preparation</span>
+        </div>
+      </div>
+      <div class="reveal md:col-span-2 md:row-span-2 rounded-[2rem] overflow-hidden relative min-h-[320px]">
+        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.43%20PM.jpeg" alt="A volunteer teacher in a Gaza classroom" class="absolute inset-0 w-full h-full object-cover">
+      </div>
+      <div class="reveal md:col-span-2 rounded-[2rem] bg-night text-white p-8 flex flex-col justify-between">
+        <div class="text-6xl font-extrabold text-lime tracking-tight">100%</div>
+        <p class="text-white/70" data-i18n="about_badge"></p>
+      </div>
+      <div class="reveal md:col-span-4 rounded-[2rem] relative overflow-hidden p-8 md:p-10 text-white flex items-end min-h-[220px]">
+        <img src="image/stock/library-lights.jpg" alt="" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-night/90 via-night/50 to-night/20"></div>
+        <p class="relative text-xl md:text-2xl font-bold leading-snug max-w-2xl" data-i18n="about_quote"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PHASE ================= -->
+<section id="phase" class="py-24 md:py-32 bg-white rounded-t-[3rem]">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="grid lg:grid-cols-[1fr_1.4fr] gap-12 items-start">
+      <div class="reveal lg:sticky lg:top-28">
+        <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-brand-dark mb-4"><span class="w-6 h-px bg-brand-dark"></span><span data-i18n="phase_eyebrow">The First Phase</span></span>
+        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5" data-i18n="phase_title"></h2>
+        <p class="text-lg text-muted mb-8" data-i18n="phase_lead"></p>
+        <div class="rounded-[2rem] overflow-hidden relative h-64">
+          <img src="image/stock/writing.jpg" alt="" class="w-full h-full object-cover">
+          <div class="absolute bottom-4 start-4 rounded-2xl bg-white/90 backdrop-blur px-5 py-3">
+            <div class="text-3xl font-extrabold">160</div>
+            <div class="text-sm text-muted font-semibold" data-i18n="phase_hl"></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div id="activities" class="grid sm:grid-cols-2 gap-4"></div>
+        <div class="reveal mt-4 flex gap-4 items-start rounded-[1.5rem] bg-brand-soft border border-brand/20 p-6">
+          <span class="w-10 h-10 shrink-0 rounded-full bg-brand text-white grid place-items-center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 21s-7.5-4.6-10-9.5C.5 8.2 2.6 4 6.5 4 9 4 10.6 5.4 12 7.2 13.4 5.4 15 4 17.5 4c3.9 0 6 4.2 4.5 7.5C19.5 16.4 12 21 12 21Z"/></svg>
+          </span>
+          <p class="font-medium text-brand-dark" data-i18n="phase_note"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GALLERY ================= -->
+<section id="gallery" class="py-24 md:py-32 bg-white">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="reveal text-center max-w-2xl mx-auto mb-14">
+      <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-brand-dark mb-4"><span data-i18n="gal_eyebrow">From Our Classrooms</span></span>
+      <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4" data-i18n="gal_title"></h2>
+      <p class="text-lg text-muted" data-i18n="gal_lead"></p>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 auto-rows-[200px] md:auto-rows-[230px] gap-4">
+      <figure class="g-item reveal group relative col-span-2 row-span-2 rounded-[2rem] overflow-hidden cursor-zoom-in" data-full="image/WhatsApp%20Image%202026-11-02%20at%202.17.43%20PM.jpeg">
+        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.43%20PM.jpeg" alt="Arabic lesson in a classroom in Gaza" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+        <figcaption class="absolute bottom-4 start-4 rounded-full bg-white/90 backdrop-blur px-4 py-2 text-sm font-bold" data-i18n="cap1"></figcaption>
+      </figure>
+      <figure class="g-item reveal group relative rounded-[2rem] overflow-hidden cursor-zoom-in" data-full="image/stock/books-stack.jpg">
+        <img src="image/stock/books-stack.jpg" alt="Stack of colourful books" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+      </figure>
+      <div class="reveal rounded-[2rem] bg-lime p-6 flex flex-col justify-between">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="#06110d"><path d="M10 7H6a3 3 0 0 0-3 3v4h5v5H3m18-12h-4a3 3 0 0 0-3 3v4h5v5h-5"/></svg>
+        <p class="font-extrabold text-lg leading-snug" data-i18n="gc1"></p>
+      </div>
+      <figure class="g-item reveal group relative row-span-2 rounded-[2rem] overflow-hidden cursor-zoom-in" data-full="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM.jpeg">
+        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM.jpeg" alt="Teacher explaining on the whiteboard" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+        <figcaption class="absolute bottom-4 start-4 end-4 rounded-full bg-white/90 backdrop-blur px-4 py-2 text-sm font-bold" data-i18n="cap2"></figcaption>
+      </figure>
+      <figure class="g-item reveal group relative rounded-[2rem] overflow-hidden cursor-zoom-in" data-full="image/stock/open-book.jpg">
+        <img src="image/stock/open-book.jpg" alt="Open book and notebook" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+      </figure>
+      <figure class="g-item reveal group relative col-span-2 md:col-span-3 rounded-[2rem] overflow-hidden cursor-zoom-in" data-full="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM%20(1).jpeg">
+        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM%20(1).jpeg" alt="Students following a lesson" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+        <figcaption class="absolute bottom-4 start-4 rounded-full bg-white/90 backdrop-blur px-4 py-2 text-sm font-bold" data-i18n="cap3"></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<div id="lightbox" class="fixed inset-0 bg-night/95 backdrop-blur hidden items-center justify-center z-[100] p-5">
+  <button class="absolute top-5 end-5 w-12 h-12 rounded-full bg-white/10 text-white text-3xl leading-none" aria-label="Close">&times;</button>
+  <img src="" alt="" class="max-h-[88vh] rounded-3xl">
+</div>
+
+<!-- ================= CONTRIBUTION ================= -->
+<section id="contribute" class="py-24 md:py-32">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="reveal max-w-2xl mb-12">
+      <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-brand-dark mb-4"><span class="w-6 h-px bg-brand-dark"></span><span data-i18n="con_eyebrow">Choose Your Contribution</span></span>
+      <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4" data-i18n="con_title"></h2>
+      <p class="text-lg text-muted" data-i18n="con_lead"></p>
+    </div>
+
+    <div id="tiers" class="grid grid-cols-2 lg:grid-cols-6 gap-3"></div>
+
+    <div class="reveal mt-4 rounded-[2rem] bg-white p-3 ps-7 flex flex-wrap items-center justify-between gap-4">
+      <div id="calcText" class="text-lg [&_b]:font-extrabold [&_b]:text-brand-dark py-2"></div>
+      <a href="#donate" class="open-pay inline-flex items-center gap-2 bg-night text-white font-bold rounded-full px-7 py-4 transition hover:bg-brand-dark">
+        <span data-i18n="cta_donate_now">Donate Now</span>
+        <svg class="rtl:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+
+    <div class="reveal mt-10 grid lg:grid-cols-[1.3fr_1fr] gap-4">
+      <div class="rounded-[2rem] bg-night text-white p-8 md:p-12 relative overflow-hidden">
+        <div class="absolute -bottom-24 -end-24 w-72 h-72 rounded-full bg-brand/30 blur-3xl"></div>
+        <div class="relative">
+          <div class="text-sm font-semibold text-white/60 mb-3" data-i18n="goal_label"></div>
+          <div class="text-6xl md:text-8xl font-extrabold tracking-tighter text-gradient mb-6">$12,800</div>
+          <div class="flex flex-wrap items-center gap-2 text-sm font-bold mb-6">
+            <span class="rounded-full bg-white/10 px-4 py-2" data-i18n="f1"></span><span class="text-white/40">×</span>
+            <span class="rounded-full bg-white/10 px-4 py-2" data-i18n="f2"></span><span class="text-white/40">×</span>
+            <span class="rounded-full bg-white/10 px-4 py-2" data-i18n="f3"></span>
+          </div>
+          <p class="text-white/70" data-i18n="goal_p"></p>
+        </div>
+      </div>
+      <div class="rounded-[2rem] overflow-hidden relative min-h-[280px]">
+        <img src="image/stock/books-stack.jpg" alt="" class="absolute inset-0 w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-brand-dark/95 via-brand-dark/40 to-transparent"></div>
+        <p class="absolute bottom-0 p-8 text-white text-2xl font-extrabold leading-snug" data-i18n="goal_strong"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHY ================= -->
+<section class="grain relative py-24 md:py-32 bg-night text-white overflow-hidden">
+  <img src="image/stock/library-aisle.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-15">
+  <div class="absolute inset-0 bg-gradient-to-b from-night via-night/80 to-night"></div>
+  <div class="relative max-w-6xl mx-auto px-4">
+    <div class="reveal max-w-3xl mb-14">
+      <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-lime mb-4"><span class="w-6 h-px bg-lime"></span><span data-i18n="why_eyebrow">Why Does Your Support Matter?</span></span>
+      <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6" data-i18n-html="why_title"></h2>
+      <p class="text-lg text-white/70" data-i18n="why_lead"></p>
+    </div>
+    <p class="reveal font-semibold text-white/80 mb-5" data-i18n="why_help"></p>
+    <div id="whyList" class="grid sm:grid-cols-2 lg:grid-cols-5 gap-3"></div>
+    <blockquote class="reveal mt-14 text-2xl md:text-4xl font-extrabold tracking-tight max-w-3xl" data-i18n="why_quote"></blockquote>
+  </div>
+</section>
+
+<!-- ================= DONATE ================= -->
+<section id="donate" class="py-24 md:py-32">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="reveal max-w-2xl mb-12">
+      <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-brand-dark mb-4"><span class="w-6 h-px bg-brand-dark"></span><span data-i18n="don_eyebrow">How to Donate</span></span>
+      <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4" data-i18n="don_title"></h2>
+      <p class="text-lg text-muted" data-i18n="don_lead"></p>
+    </div>
+
+    <div class="grid lg:grid-cols-[1.25fr_1fr] gap-6 items-start">
+      <!-- Bank card -->
+      <div class="reveal">
+        <div class="relative rounded-[2rem] overflow-hidden text-white p-7 sm:p-9 bg-gradient-to-br from-[#0f2a20] via-night to-black shadow-[0_40px_80px_-30px_rgba(6,17,13,.7)]">
+          <div class="absolute -top-24 -end-24 w-72 h-72 rounded-full bg-brand/25 blur-3xl"></div>
+          <div class="absolute bottom-0 inset-x-0 h-1.5 flex"><span class="flex-1 bg-black"></span><span class="flex-1 bg-[#fdda24]"></span><span class="flex-1 bg-[#ef3340]"></span></div>
+
+          <div class="relative flex items-start justify-between gap-4 mb-10">
+            <div>
+              <div class="text-xs uppercase tracking-[.2em] text-white/50 mb-1" data-i18n="bank_title"></div>
+              <div class="text-xl font-extrabold">Revolut Bank UAB</div>
+              <div class="text-sm text-white/60 flex items-center gap-1.5 mt-0.5">
+                <svg width="18" height="12" viewBox="0 0 3 2" class="rounded-sm"><rect width="1" height="2" fill="#000"/><rect x="1" width="1" height="2" fill="#FDDA24"/><rect x="2" width="1" height="2" fill="#EF3340"/></svg>
+                <span data-i18n="b_country">Belgium · Belgian account</span>
+              </div>
+            </div>
+            <!-- chip -->
+            <div class="w-12 h-9 rounded-md bg-gradient-to-br from-yellow-200 via-yellow-400 to-yellow-600 opacity-90 grid grid-cols-3 gap-px p-1"><span class="bg-black/10 rounded-sm"></span><span class="bg-black/10 rounded-sm"></span><span class="bg-black/10 rounded-sm"></span><span class="bg-black/10 rounded-sm"></span><span class="bg-black/10 rounded-sm"></span><span class="bg-black/10 rounded-sm"></span></div>
+          </div>
+
+          <div class="relative mb-8">
+            <div class="text-xs uppercase tracking-[.2em] text-white/50 mb-2">IBAN</div>
+            <div class="flex flex-wrap items-center gap-3">
+              <div class="text-2xl sm:text-3xl font-bold tracking-[.12em] font-mono" dir="ltr">BE34 6500 5510 2390</div>
+              <button class="copy-btn rounded-full bg-lime text-night px-4 py-1.5 text-sm font-bold transition" data-copy="BE34650055102390"><span data-i18n="copy">Copy</span></button>
+            </div>
+          </div>
+
+          <div id="bankRows" class="relative grid sm:grid-cols-3 gap-3 mb-4"></div>
+        </div>
+        <button type="button" class="open-pay mt-4 w-full rounded-full bg-lime text-night py-4 font-extrabold text-lg transition hover:scale-[1.01] flex items-center justify-center gap-2.5 shadow-[0_15px_30px_-12px_rgba(132,204,22,.6)]">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>
+          <span data-i18n="pay_btn">Pay with your banking app</span>
+        </button>
+        <button id="copyAll" class="mt-3 w-full rounded-full border-2 border-night/10 hover:border-night py-3.5 font-bold transition flex items-center justify-center gap-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <span data-i18n="copy_all">Copy all bank details</span>
+        </button>
+      </div>
+
+      <div class="grid gap-4">
+        <div class="reveal rounded-[2rem] bg-white p-7">
+          <div class="w-11 h-11 rounded-full bg-brand-soft text-brand-dark grid place-items-center mb-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <h3 class="font-extrabold text-xl mb-2" data-i18n="instr_t"></h3>
+          <p class="text-muted" data-i18n="instr"></p>
+        </div>
+        <div id="contact" class="reveal rounded-[2rem] bg-[#25d366] text-night p-7 relative overflow-hidden">
+          <svg class="absolute -bottom-6 -end-6 opacity-15" width="160" height="160" viewBox="0 0 24 24" fill="#06110d"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Z"/></svg>
+          <h3 class="relative font-extrabold text-xl mb-2" data-i18n="wa_t"></h3>
+          <p class="relative text-night/75 mb-4" data-i18n="wa_p"></p>
+          <div class="relative text-2xl font-extrabold mb-5" dir="ltr">+972 59-402-8538</div>
+          <a href="https://wa.me/972594028538" target="_blank" rel="noopener" class="relative inline-flex items-center gap-2 bg-night text-white font-bold rounded-full px-6 py-3.5 transition hover:scale-[1.02]">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.3.5-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.6 2.1 1.1 1 2.1 1.3 2.4 1.4.3.2.5.1.6 0l.9-1.1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z"/></svg>
+            <span data-i18n="wa_btn"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= COMMITMENT ================= -->
+<section class="pb-24 md:pb-32">
+  <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-[1fr_1fr_1fr] gap-4">
+    <div class="reveal rounded-[2rem] bg-brand-dark text-white p-8 flex flex-col justify-between min-h-[260px]">
+      <span class="text-xs font-bold uppercase tracking-[.18em] text-lime" data-i18n="com_eyebrow"></span>
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" data-i18n="com_title"></h2>
+    </div>
+    <div class="reveal rounded-[2rem] bg-white p-8">
+      <div class="text-5xl font-extrabold text-brand/30 mb-4">01</div>
+      <p class="text-muted" data-i18n="com1"></p>
+    </div>
+    <div class="reveal rounded-[2rem] bg-white p-8">
+      <div class="text-5xl font-extrabold text-brand/30 mb-4">02</div>
+      <p class="text-muted" data-i18n="com2"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="px-4 pb-6">
+  <div class="reveal relative max-w-7xl mx-auto rounded-[2.5rem] overflow-hidden text-white text-center py-24 md:py-32 px-6">
+    <img src="image/stock/love-to-learn.jpg" alt="" class="absolute inset-0 w-full h-full object-cover">
+    <div class="absolute inset-0 bg-gradient-to-br from-night/95 via-night/85 to-brand-dark/80"></div>
+    <div class="relative max-w-3xl mx-auto">
+      <h2 class="text-4xl md:text-7xl font-extrabold tracking-tighter mb-6" data-i18n-html="cta_title"></h2>
+      <p class="text-lg text-white/75 mb-3" data-i18n="cta_p1"></p>
+      <p class="text-xl font-bold text-lime my-6" data-i18n="cta_p2"></p>
+      <p class="text-white/75 mb-3" data-i18n="cta_p3"></p>
+      <p class="text-xl font-bold my-6" data-i18n="cta_p4"></p>
+      <div class="flex flex-wrap gap-3 justify-center mt-10">
+        <a href="#donate" class="inline-flex items-center bg-lime text-night font-bold rounded-full px-8 py-4 transition hover:scale-[1.03]" data-i18n="cta_sponsor"></a>
+        <button id="shareBtn" class="inline-flex items-center gap-2 border border-white/30 bg-white/5 backdrop-blur text-white font-bold rounded-full px-8 py-4 transition hover:bg-white/15">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>
+          <span data-i18n="share"></span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="py-10 text-sm text-muted">
+  <div class="max-w-6xl mx-auto px-4 flex flex-wrap justify-between items-center gap-4">
+    <a href="#top" class="flex items-center gap-2.5 font-extrabold text-night">
+      <span class="w-9 h-9 rounded-full bg-night grid place-items-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#c6f432" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg></span>
+      <span data-i18n="foot_brand"></span>
+    </a>
+    <span>© <span id="year"></span> · <span data-i18n="foot"></span></span>
+  </div>
+</footer>
+
+<!-- ================= PAY MODAL (EPC / SEPA QR) ================= -->
+<div id="payModal" class="fixed inset-0 z-[150] hidden items-end sm:items-center justify-center bg-night/70 backdrop-blur-sm p-0 sm:p-4" role="dialog" aria-modal="true" aria-labelledby="payTitle">
+  <div class="bg-white w-full sm:max-w-3xl max-h-[95vh] overflow-y-auto rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl">
+    <div class="flex items-start justify-between gap-4 p-6 sm:p-8 pb-0">
+      <div>
+        <h3 id="payTitle" class="text-2xl sm:text-3xl font-extrabold tracking-tight" data-i18n="pay_title">Pay with your banking app</h3>
+        <p class="text-muted mt-1" data-i18n="pay_sub">Scan the code — your bank fills in everything for you.</p>
+      </div>
+      <button id="payClose" class="w-10 h-10 shrink-0 rounded-full bg-sand hover:bg-night/10 text-2xl leading-none" aria-label="Close">&times;</button>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6 p-6 sm:p-8">
+      <!-- Left: form -->
+      <div>
+        <label for="payAmount" class="block text-sm font-bold mb-2" data-i18n="pay_amount">Amount (EUR)</label>
+        <div class="flex items-center rounded-2xl border-2 border-night/10 focus-within:border-brand px-4">
+          <span class="text-2xl font-extrabold text-muted">€</span>
+          <input id="payAmount" type="number" inputmode="decimal" min="1" max="999999" step="1" value="20" class="w-full bg-transparent px-2 py-3 text-2xl font-extrabold outline-none" dir="ltr">
+        </div>
+        <div id="payChips" class="flex flex-wrap gap-2 mt-3"></div>
+        <p id="payStudents" class="text-sm text-brand-dark font-semibold mt-3"></p>
+
+        <label for="payName" class="block text-sm font-bold mt-6 mb-2" data-i18n="pay_name">Your name (optional)</label>
+        <input id="payName" type="text" maxlength="60" class="w-full rounded-2xl border-2 border-night/10 focus:border-brand px-4 py-3 outline-none" dir="ltr">
+
+        <div class="mt-6 rounded-2xl bg-sand p-4 text-sm space-y-1.5" dir="ltr">
+          <div class="flex justify-between gap-3"><span class="text-muted">Beneficiary</span><b class="text-end">Abdelrahman Abusaman</b></div>
+          <div class="flex justify-between gap-3"><span class="text-muted">IBAN</span><b class="font-mono">BE34 6500 5510 2390</b></div>
+          <div class="flex justify-between gap-3"><span class="text-muted">BIC</span><b class="font-mono">REVOBEB2</b></div>
+          <div class="flex justify-between gap-3"><span class="text-muted">Reference</span><b id="payRefShow" class="text-end break-all"></b></div>
+        </div>
+      </div>
+
+      <!-- Right: QR -->
+      <div class="flex flex-col items-center text-center">
+        <div class="relative rounded-[1.5rem] bg-white border-2 border-night/10 p-4 w-full max-w-[290px] aspect-square grid place-items-center">
+          <div id="payQr" class="w-full [&_svg]:w-full [&_svg]:h-auto"></div>
+          <div id="payQrError" class="hidden text-sm text-coral font-semibold p-4" data-i18n="pay_invalid">Enter a valid amount</div>
+        </div>
+        <div class="mt-3 text-3xl font-extrabold" dir="ltr">€<span id="payAmountShow">20.00</span></div>
+        <div class="flex flex-wrap gap-2 justify-center mt-4">
+          <button id="payDownload" class="rounded-full bg-night text-white px-5 py-2.5 text-sm font-bold hover:bg-brand-dark transition" data-i18n="pay_download">Save QR image</button>
+          <button id="payCopy" class="rounded-full border-2 border-night/10 hover:border-night px-5 py-2.5 text-sm font-bold transition" data-i18n="copy_all">Copy all bank details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-6 sm:px-8 pb-8">
+      <ol class="grid sm:grid-cols-3 gap-3 text-sm">
+        <li class="rounded-2xl bg-brand-soft p-4"><b class="block text-brand-dark mb-1">1</b><span data-i18n="pay_s1">Open your banking app and choose “Scan QR / Pay by QR code”.</span></li>
+        <li class="rounded-2xl bg-brand-soft p-4"><b class="block text-brand-dark mb-1">2</b><span data-i18n="pay_s2">Scan this code — name, IBAN, amount and reference are filled in automatically.</span></li>
+        <li class="rounded-2xl bg-brand-soft p-4"><b class="block text-brand-dark mb-1">3</b><span data-i18n="pay_s3">Check the details and confirm the transfer. Thank you!</span></li>
+      </ol>
+      <p class="text-xs text-muted mt-4" data-i18n="pay_note">The QR code follows the European EPC (SEPA) standard and works with most banking apps in Europe. Amount is in euros. If your bank doesn't support it (e.g. outside Europe), use “Copy all bank details” and make an international transfer.</p>
+    </div>
+  </div>
+</div>
+
+<div id="toast"class="fixed bottom-6 left-1/2 -translate-x-1/2 translate-y-32 bg-night text-white px-6 py-3 rounded-full font-semibold transition-transform duration-300 z-[200] shadow-2xl"></div>
+
+<script>
+const T = {
+  en: {
+    brand:"Rescue", nav_about:"About", nav_phase:"First Phase", nav_gallery:"Gallery", nav_contribute:"Contribute", nav_contact:"Contact", nav_donate:"Donate",
+    hero_tag:"Rescue Educational Initiative · Gaza",
+    hero_title:'Sponsor a Student.<br><span class="text-gradient">Rescue a Future.</span>',
+    hero_p1:"Support education. Help build a generation's future. Together, we can help Gaza's students continue their education and build a better future.",
+    hero_price:"Support one student<br>— per month", hero_real:"📍 Real classroom · Gaza",
+    cta_sponsor:"Sponsor a Student", cta_learn:"Learn More",
+    stat_students:"High school students", stat_months:"Months — first phase", stat_cost:"Per student / month", stat_goal:"Total funding goal",
+    marquee:["Arabic","English","Mathematics","Free Lessons","Revision Sessions","Exam Preparation","Study Groups","Hope"],
+    about_eyebrow:"About the Initiative", about_title:"Education is not just a right — it's a source of hope.",
+    about_p1:'The <strong class="text-night">Rescue Educational Initiative</strong> is a volunteer-led educational initiative that aims to support high school students in the Gaza Strip and help them continue their education and make up for the learning they have missed due to exceptional circumstances.',
+    about_p2:"The initiative brings together volunteer teachers, specialists, and academics to provide free educational lessons, academic revision sessions, and exam preparation support.",
+    about_p3:"Join us in supporting high school students in Gaza and helping them regain access to learning after years of disruption and extremely difficult circumstances.",
+    tag1:"Free lessons", tag2:"Revision sessions", tag3:"Exam preparation",
+    about_quote:"“We believe that every student deserves a real opportunity to learn, and that supporting education today means investing in Gaza's future.”",
+    about_badge:"Volunteer teachers and specialists — no salaries from the project budget.",
+    phase_eyebrow:"The First Phase", phase_title:"What we will do", phase_lead:"The first phase aims to support 160 high school students over four months. The planned activities include:", phase_hl:"students · 4 months",
+    a1_t:"Free Lessons", a1:"Providing free educational lessons and revision sessions.",
+    a2_t:"Core Subjects", a2:"Supporting students in core subjects, including Arabic, English, and Mathematics.",
+    a3_t:"Study Groups", a3:"Organizing study groups according to students' levels and learning needs.",
+    a4_t:"Level Assessment", a4:"Assessing students' initial academic levels and monitoring their progress.",
+    a5_t:"Regular Tests", a5:"Conducting regular tests and assessments to measure learning progress.",
+    a6_t:"Learning Materials", a6:"Providing the educational materials and resources needed to support learning.",
+    phase_note:"The educational activities will be delivered by volunteer teachers and specialists who will not receive salaries from the project budget.",
+    gal_eyebrow:"From Our Classrooms", gal_title:"Learning continues, despite everything",
+    gal_lead:"Real moments from our lessons in Gaza — volunteer teachers and determined students rebuilding the path to their future.",
+    cap1:"An Arabic lesson in session", cap2:"Explaining on the board", cap3:"Students following along with focus",
+    gc1:"Don't let students' dreams come to an end.",
+    con_eyebrow:"Choose Your Contribution", con_title:"How many students will you sponsor?",
+    con_lead:"You can make a monthly contribution to support one or more students and help provide them with access to learning.",
+    per_month:"/ month", student1:"1 student", studentN:"{n} students",
+    calc:"<b>${a}/month</b> supports <b>{s}</b> — that's <b>${t}</b> over the four-month first phase.",
+    cta_donate_now:"Donate Now",
+    goal_label:"Total Funding Goal for the First Phase",
+    goal_p:"This is the amount required to support 160 students over four months, at a cost of $20 per student per month.",
+    f1:"160 students", f2:"4 months", f3:"$20 / month",
+    goal_strong:"Together, we can give 160 students a new opportunity for learning and hope.",
+    why_eyebrow:"Why Does Your Support Matter?", why_title:'Ambition is there.<br><span class="text-lime">Opportunity is missing.</span>',
+    why_lead:"Students in Gaza have not lost their educational opportunities because they lack ambition or the desire to learn. Many have been deprived of regular education because of extremely difficult circumstances.",
+    why_help:"Your contribution will help us:",
+    w1:"Help students return to learning.", w2:"Provide free lessons and academic revision sessions.",
+    w3:"Cover the costs of learning spaces, equipment, and educational materials.",
+    w4:"Meet essential operating costs, including electricity, internet, printing, and transportation.",
+    w5:"Help students prepare for their examinations and continue their education.",
+    why_quote:"“For the future of an entire generation, join us in this shared responsibility. Your support today could make a difference in a student's tomorrow.”",
+    don_eyebrow:"How to Donate", don_title:"Bank transfer details",
+    don_lead:"We welcome your contributions to support the Rescue Educational Initiative. Transfers go to our Belgian bank account below.",
+    bank_title:"Bank Account Details", b_country:"Belgium · Belgian account",
+    b_name:"Account Holder", b_bic:"BIC / SWIFT", b_corr:"Correspondent BIC",
+    copy:"Copy", copied:"Copied!", copy_all:"Copy all bank details", all_copied:"All bank details copied",
+    instr_t:"Donation Instructions",
+    instr:"Please use the verified bank details to make your contribution. After completing your transfer, you may contact our technical support team if you need assistance or further information.",
+    wa_t:"Need More Information?",
+    wa_p:"Questions about the initiative, donations or bank transfers? Our technical support team will be happy to help.",
+    wa_btn:"Chat on WhatsApp",
+    com_eyebrow:"Our Commitment to Donors", com_title:"Transparency & accountability",
+    com1:"We believe in transparency and accountability in humanitarian and educational work. We are committed to directing contributions towards the educational objectives of the initiative.",
+    com2:"We will also monitor the implementation of educational activities and keep our supporters informed about project developments and progress through updates and relevant information.",
+    cta_title:'Be Part of<br><span class="text-gradient">Creating Hope</span>', cta_p1:"Share this initiative. Help build a generation's future.",
+    cta_p2:"Sponsor a Student. Support Education. Rescue a Future.",
+    cta_p3:"Never underestimate the impact of your contribution. You could be the reason a student continues their education and achieves their dream. Every contribution, no matter its size, can make a meaningful difference in the life of a student waiting for an opportunity to continue learning.",
+    cta_p4:"Together, we complete the journey. Together, we build a better future.",
+    share:"Share the Initiative", link_copied:"Link copied — thank you for sharing!",
+    foot_brand:"Rescue Educational Initiative", foot:"Sponsor a Student. Rescue a Future.",
+    pay_btn:"Pay with your banking app", pay_title:"Pay with your banking app",
+    pay_sub:"Scan the code — your bank fills in everything for you.",
+    pay_amount:"Amount (EUR)", pay_name:"Your name (optional)", pay_invalid:"Enter a valid amount",
+    pay_download:"Save QR image", pay_students:"≈ sponsors {s} per month",
+    pay_s1:"Open your banking app and choose “Scan QR / Pay by QR code”.",
+    pay_s2:"Scan this code — name, IBAN, amount and reference are filled in automatically.",
+    pay_s3:"Check the details and confirm the transfer. Thank you!",
+    pay_note:"The QR code follows the European EPC (SEPA) standard and works with most banking apps in Europe. Amount is in euros. If your bank doesn't support it (e.g. outside Europe), use “Copy all bank details” and make an international transfer.",
+    lang_switch:"العربية", doc_title:"Rescue Educational Initiative"
+  },
+  ar: {
+    brand:"إنقاذ", nav_about:"عن المبادرة", nav_phase:"المرحلة الأولى", nav_gallery:"صور", nav_contribute:"ساهم", nav_contact:"تواصل", nav_donate:"تبرّع",
+    hero_tag:"مبادرة إنقاذ التعليمية · غزة",
+    hero_title:'اكفل طالبًا.<br><span class="text-gradient">أنقذ مستقبلًا.</span>',
+    hero_p1:"ادعم التعليم وساهم في بناء مستقبل جيل كامل. معًا نستطيع أن نساعد طلاب غزة على مواصلة تعليمهم وبناء مستقبل أفضل.",
+    hero_price:"تكفل طالبًا واحدًا<br>— شهريًا", hero_real:"📍 صف حقيقي · غزة",
+    cta_sponsor:"اكفل طالبًا", cta_learn:"اعرف المزيد",
+    stat_students:"طالب وطالبة ثانوية", stat_months:"أشهر — المرحلة الأولى", stat_cost:"لكل طالب شهريًا", stat_goal:"إجمالي هدف التمويل",
+    marquee:["اللغة العربية","اللغة الإنجليزية","الرياضيات","دروس مجانية","جلسات مراجعة","التحضير للامتحانات","مجموعات دراسية","أمل"],
+    about_eyebrow:"عن المبادرة", about_title:"التعليم ليس مجرد حق — إنه مصدر للأمل.",
+    about_p1:'<strong class="text-night">مبادرة إنقاذ التعليمية</strong> مبادرة تطوعية تهدف إلى دعم طلاب المرحلة الثانوية في قطاع غزة، ومساعدتهم على مواصلة تعليمهم وتعويض ما فاتهم من تعلّم بسبب الظروف الاستثنائية.',
+    about_p2:"تجمع المبادرة معلمين متطوعين ومختصين وأكاديميين لتقديم دروس تعليمية مجانية وجلسات مراجعة أكاديمية ودعم للتحضير للامتحانات.",
+    about_p3:"انضم إلينا في دعم طلاب الثانوية في غزة ومساعدتهم على العودة إلى التعلّم بعد سنوات من الانقطاع والظروف الصعبة للغاية.",
+    tag1:"دروس مجانية", tag2:"جلسات مراجعة", tag3:"تحضير للامتحانات",
+    about_quote:"«نؤمن بأن كل طالب يستحق فرصة حقيقية للتعلّم، وأن دعم التعليم اليوم هو استثمار في مستقبل غزة.»",
+    about_badge:"معلمون ومختصون متطوعون — بدون رواتب من ميزانية المشروع.",
+    phase_eyebrow:"المرحلة الأولى", phase_title:"ماذا سنفعل", phase_lead:"تهدف المرحلة الأولى إلى دعم 160 طالبًا وطالبة في المرحلة الثانوية خلال أربعة أشهر. وتشمل الأنشطة المخطط لها:", phase_hl:"طالبًا · 4 أشهر",
+    a1_t:"دروس مجانية", a1:"تقديم دروس تعليمية وجلسات مراجعة مجانية.",
+    a2_t:"المواد الأساسية", a2:"دعم الطلاب في المواد الأساسية، ومنها اللغة العربية واللغة الإنجليزية والرياضيات.",
+    a3_t:"مجموعات دراسية", a3:"تنظيم مجموعات دراسية حسب مستويات الطلاب واحتياجاتهم التعليمية.",
+    a4_t:"تقييم المستوى", a4:"تقييم المستوى الأكاديمي الأولي للطلاب ومتابعة تقدّمهم.",
+    a5_t:"اختبارات دورية", a5:"إجراء اختبارات وتقييمات دورية لقياس التقدّم في التعلّم.",
+    a6_t:"مواد تعليمية", a6:"توفير المواد والموارد التعليمية اللازمة لدعم التعلّم.",
+    phase_note:"سيقدّم الأنشطة التعليمية معلمون ومختصون متطوعون لن يتقاضوا رواتب من ميزانية المشروع.",
+    gal_eyebrow:"من صفوفنا", gal_title:"التعليم مستمر رغم كل شيء",
+    gal_lead:"لحظات حقيقية من دروسنا في غزة — معلمون متطوعون وطلاب مصمّمون يعيدون بناء طريقهم نحو المستقبل.",
+    cap1:"حصة لغة عربية", cap2:"الشرح على اللوح", cap3:"طلاب يتابعون الدرس باهتمام",
+    gc1:"لا تدع أحلام الطلاب تتوقف.",
+    con_eyebrow:"اختر مساهمتك", con_title:"كم طالبًا ستكفل؟",
+    con_lead:"يمكنك تقديم مساهمة شهرية لدعم طالب أو أكثر ومساعدتهم على الوصول إلى التعليم.",
+    per_month:"/ شهريًا", student1:"طالب واحد", studentN:"{n} طلاب",
+    calc:"<b>{a}$ شهريًا</b> تكفل <b>{s}</b> — أي <b>{t}$</b> خلال أشهر المرحلة الأولى الأربعة.",
+    cta_donate_now:"تبرّع الآن",
+    goal_label:"إجمالي هدف التمويل للمرحلة الأولى",
+    goal_p:"هذا هو المبلغ المطلوب لدعم 160 طالبًا لمدة أربعة أشهر، بتكلفة 20 دولارًا لكل طالب شهريًا.",
+    f1:"160 طالبًا", f2:"4 أشهر", f3:"20$ شهريًا",
+    goal_strong:"معًا نستطيع أن نمنح 160 طالبًا فرصة جديدة للتعلّم والأمل.",
+    why_eyebrow:"لماذا دعمك مهم؟", why_title:'الطموح موجود.<br><span class="text-lime">الفرصة هي الغائبة.</span>',
+    why_lead:"لم يفقد طلاب غزة فرصهم التعليمية بسبب قلة الطموح أو الرغبة في التعلّم، بل حُرم كثير منهم من التعليم المنتظم بسبب ظروف صعبة للغاية.",
+    why_help:"ستساعدنا مساهمتك على:",
+    w1:"مساعدة الطلاب على العودة إلى التعلّم.", w2:"تقديم دروس وجلسات مراجعة أكاديمية مجانية.",
+    w3:"تغطية تكاليف أماكن التعلّم والمعدات والمواد التعليمية.",
+    w4:"تغطية التكاليف التشغيلية الأساسية، مثل الكهرباء والإنترنت والطباعة والمواصلات.",
+    w5:"مساعدة الطلاب على الاستعداد لامتحاناتهم ومواصلة تعليمهم.",
+    why_quote:"«من أجل مستقبل جيل كامل، شاركنا هذه المسؤولية. دعمك اليوم قد يصنع الفرق في غد طالب.»",
+    don_eyebrow:"كيف تتبرّع", don_title:"بيانات التحويل البنكي",
+    don_lead:"نرحّب بمساهماتكم لدعم مبادرة إنقاذ التعليمية. يتم التحويل إلى حسابنا البنكي البلجيكي أدناه.",
+    bank_title:"بيانات الحساب البنكي", b_country:"بلجيكا · حساب بنكي بلجيكي",
+    b_name:"صاحب الحساب", b_bic:"رمز BIC / SWIFT", b_corr:"BIC البنك المراسل",
+    copy:"نسخ", copied:"تم النسخ!", copy_all:"نسخ كل بيانات البنك", all_copied:"تم نسخ كل بيانات البنك",
+    instr_t:"تعليمات التبرّع",
+    instr:"يرجى استخدام بيانات الحساب البنكي الموثّقة لتقديم مساهمتك. بعد إتمام التحويل، يمكنك التواصل مع فريق الدعم الفني إذا احتجت إلى مساعدة أو مزيد من المعلومات.",
+    wa_t:"تحتاج إلى معلومات أكثر؟",
+    wa_p:"عندك أسئلة عن المبادرة أو التبرعات أو التحويلات البنكية؟ يسعد فريق الدعم الفني مساعدتك.",
+    wa_btn:"تواصل عبر واتساب",
+    com_eyebrow:"التزامنا تجاه المتبرعين", com_title:"الشفافية والمساءلة",
+    com1:"نؤمن بالشفافية والمساءلة في العمل الإنساني والتعليمي، ونلتزم بتوجيه المساهمات نحو الأهداف التعليمية للمبادرة.",
+    com2:"كما سنتابع تنفيذ الأنشطة التعليمية ونُطلع داعمينا على تطورات المشروع وتقدّمه من خلال التحديثات والمعلومات ذات الصلة.",
+    cta_title:'كن جزءًا من<br><span class="text-gradient">صناعة الأمل</span>', cta_p1:"شارك المبادرة. ساهم في بناء مستقبل جيل.",
+    cta_p2:"اكفل طالبًا. ادعم التعليم. أنقذ مستقبلًا.",
+    cta_p3:"لا تستهِن بأثر مساهمتك؛ فقد تكون السبب في أن يواصل طالب تعليمه ويحقق حلمه. كل مساهمة، مهما كان حجمها، يمكن أن تصنع فرقًا حقيقيًا في حياة طالب ينتظر فرصة لمواصلة التعلّم.",
+    cta_p4:"معًا نكمل الطريق. معًا نبني مستقبلًا أفضل.",
+    share:"شارك المبادرة", link_copied:"تم نسخ الرابط — شكرًا لمشاركتك!",
+    foot_brand:"مبادرة إنقاذ التعليمية", foot:"اكفل طالبًا. أنقذ مستقبلًا.",
+    pay_btn:"ادفع عبر تطبيق البنك", pay_title:"ادفع عبر تطبيق البنك",
+    pay_sub:"امسح الرمز — وتطبيق البنك يعبّي كل البيانات عنك.",
+    pay_amount:"المبلغ (يورو)", pay_name:"اسمك (اختياري)", pay_invalid:"أدخل مبلغًا صحيحًا",
+    pay_download:"حفظ صورة الرمز", pay_students:"≈ تكفل {s} شهريًا",
+    pay_s1:"افتح تطبيق البنك واختر «مسح QR / الدفع برمز QR».",
+    pay_s2:"امسح هذا الرمز — يتم تعبئة الاسم والآيبان والمبلغ والملاحظة تلقائيًا.",
+    pay_s3:"راجع البيانات وأكّد التحويل. شكرًا لك!",
+    pay_note:"الرمز مبني على المعيار الأوروبي EPC (SEPA) ويعمل مع أغلب تطبيقات البنوك في أوروبا، والمبلغ باليورو. إذا كان بنكك لا يدعمه (مثلًا خارج أوروبا)، استخدم «نسخ كل بيانات البنك» وقم بتحويل دولي.",
+    lang_switch:"English", doc_title:"مبادرة إنقاذ التعليمية"
+  }
+};
+
+/* ---------- Data ---------- */
+const BANK = {
+  holder: 'Abdelrahman Abusaman',
+  iban:   'BE34650055102390',
+  bic:    'REVOBEB2',
+  corr:   'CHASDEFX',
+  bank:   'Revolut Bank UAB (Belgium)',
+};
+
+const ICONS = {
+  book:'<path d="M2 4h7a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H2z"/><path d="M22 4h-7a3 3 0 0 0-3 3v13a2 2 0 0 1 2-2h8z"/>',
+  text:'<path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/>',
+  users:'<circle cx="9" cy="7" r="4"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/><path d="M21 21v-2a4 4 0 0 0-3-3.9"/>',
+  chart:'<path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-6"/>',
+  check:'<path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>',
+  file:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/>'
+};
+const svg = (p, s=22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+
+document.getElementById('activities').innerHTML =
+  [['book','a1'],['text','a2'],['users','a3'],['chart','a4'],['check','a5'],['file','a6']].map(([ic,k],i) => `
+    <div class="reveal group rounded-[1.5rem] bg-sand hover:bg-night hover:text-white p-6 transition-colors duration-300">
+      <div class="flex items-center justify-between mb-8">
+        <span class="w-11 h-11 rounded-full bg-white text-brand-dark group-hover:bg-lime group-hover:text-night grid place-items-center transition">${svg(ICONS[ic])}</span>
+        <span class="text-sm font-bold text-muted group-hover:text-white/40">0${i+1}</span>
+      </div>
+      <h3 class="font-extrabold text-lg mb-1.5" data-i18n="${k}_t"></h3>
+      <p class="text-muted group-hover:text-white/70 text-[.95rem] transition-colors" data-i18n="${k}"></p>
+    </div>`).join('');
+
+document.getElementById('tiers').innerHTML =
+  [[20,1],[40,2],[100,5],[200,10],[400,20],[1000,50]].map(([a,n]) => `
+    <button type="button" class="tier reveal text-start rounded-[1.5rem] bg-white border-2 border-transparent hover:border-night/20 p-5 transition-all duration-300 ${a===100?'active':''}" data-amount="${a}" data-n="${n}">
+      <div class="t-amount text-3xl font-extrabold tracking-tight text-night">$${a.toLocaleString('en-US')}</div>
+      <div class="t-muted text-xs text-muted mb-5" data-i18n="per_month"></div>
+      <div class="flex items-center gap-1.5 text-sm font-bold">
+        ${svg('<path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',16)}
+        <span data-n="${n}"></span>
+      </div>
+    </button>`).join('');
+
+const tick = '<span class="w-8 h-8 rounded-full bg-lime text-night grid place-items-center mb-5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>';
+document.getElementById('whyList').innerHTML = ['w1','w2','w3','w4','w5']
+  .map(k => `<div class="reveal rounded-[1.5rem] bg-white/5 border border-white/10 backdrop-blur p-6 hover:bg-white/10 transition">${tick}<p class="text-white/85 font-medium" data-i18n="${k}"></p></div>`).join('');
+
+document.getElementById('bankRows').innerHTML = [
+  ['b_name', BANK.holder], ['b_bic', BANK.bic], ['b_corr', BANK.corr]
+].map(([k, v]) => `
+  <div class="rounded-2xl bg-white/5 border border-white/10 p-4">
+    <div class="text-[11px] uppercase tracking-[.15em] text-white/50 mb-1" data-i18n="${k}"></div>
+    <div class="font-bold break-words mb-3" dir="ltr">${v}</div>
+    <button class="copy-btn rounded-full bg-white/10 hover:bg-white/20 px-3 py-1 text-xs font-bold transition" data-copy="${v}"><span data-i18n="copy"></span></button>
+  </div>`).join('');
+
+/* ---------- i18n ---------- */
+let lang = 'en';
+try { lang = localStorage.getItem('lang') || 'en'; } catch(e) {}
+let selected = {a:100, n:5};
+
+const studentsLabel = n => n === 1 ? T[lang].student1 : T[lang].studentN.replace('{n}', n);
+const fmt = n => n.toLocaleString('en-US');
+
+function renderCalc(){
+  document.getElementById('calcText').innerHTML = T[lang].calc
+    .replace('{a}', fmt(selected.a)).replace('{s}', studentsLabel(selected.n)).replace('{t}', fmt(selected.a * 4));
+}
+function renderMarquee(){
+  const star = '<span class="text-brand-dark">✦</span>';
+  const row = T[lang].marquee.map(w => `<span>${w}</span>${star}`).join('');
+  document.getElementById('marquee').innerHTML = `<div class="flex gap-10 items-center">${row}</div><div class="flex gap-10 items-center" aria-hidden="true">${row}</div>`;
+}
+
+const HTML_KEYS = new Set(['hero_price']);
+function applyLang(){
+  const html = document.documentElement;
+  html.lang = lang;
+  html.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.dataset.i18n, v = T[lang][k]; if (!v) return;
+    HTML_KEYS.has(k) ? el.innerHTML = v : el.textContent = v;
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => { const v = T[lang][el.dataset.i18nHtml]; if (v) el.innerHTML = v; });
+  document.querySelectorAll('span[data-n]').forEach(el => el.textContent = studentsLabel(+el.dataset.n));
+  document.getElementById('langBtn').textContent = T[lang].lang_switch;
+  document.title = T[lang].doc_title;
+  renderCalc(); renderMarquee();
+}
+
+document.getElementById('langBtn').addEventListener('click', () => {
+  lang = lang === 'en' ? 'ar' : 'en';
+  try { localStorage.setItem('lang', lang); } catch(e) {}
+  applyLang();
+});
+
+/* ---------- Interactions ---------- */
+document.querySelectorAll('.tier').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tier').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  selected = {a:+t.dataset.amount, n:+t.dataset.n};
+  renderCalc();
+}));
+
+const toast = document.getElementById('toast');
+function showToast(msg){
+  toast.textContent = msg; toast.classList.replace('translate-y-32', 'translate-y-0');
+  clearTimeout(showToast.t); showToast.t = setTimeout(() => toast.classList.replace('translate-y-0', 'translate-y-32'), 2200);
+}
+function copyText(text){
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+  const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta);
+  ta.select(); document.execCommand('copy'); ta.remove(); return Promise.resolve();
+}
+
+document.querySelectorAll('.copy-btn').forEach(b => b.addEventListener('click', () => {
+  copyText(b.dataset.copy).then(() => {
+    const span = b.querySelector('span');
+    span.textContent = T[lang].copied;
+    setTimeout(() => { span.textContent = T[lang].copy; }, 1600);
+  });
+}));
+
+document.getElementById('copyAll').addEventListener('click', () => {
+  const text = [
+    `Account Holder Name: ${BANK.holder}`,
+    `IBAN: ${BANK.iban}`,
+    `BIC/SWIFT Code: ${BANK.bic}`,
+    `Correspondent Bank BIC: ${BANK.corr}`,
+    `Bank: ${BANK.bank}`,
+  ].join('\n');
+  copyText(text).then(() => showToast(T[lang].all_copied));
+});
+
+/* ---------- Pay by banking app (EPC / SEPA QR "GiroCode") ---------- */
+const pay = {
+  modal: document.getElementById('payModal'),
+  amount: document.getElementById('payAmount'),
+  name: document.getElementById('payName'),
+  qr: document.getElementById('payQr'),
+  err: document.getElementById('payQrError'),
+};
+
+// EPC069-12 payload: bank apps read this and pre-fill the SEPA transfer
+function epcPayload(amount, reference){
+  return [
+    'BCD', '002', '1', 'SCT',
+    BANK.bic,
+    BANK.holder,
+    BANK.iban,
+    'EUR' + amount.toFixed(2),
+    '',          // purpose code
+    '',          // structured reference
+    reference,   // free-text remittance info (max 140)
+  ].join('\n');
+}
+// Keep the reference plain ASCII so every bank app reads it correctly
+const asciiOnly = s => s.normalize('NFKD').replace(/[^\x20-\x7E]/g, '').trim();
+function payReference(){
+  const who = asciiOnly(pay.name.value).slice(0, 60);
+  return ('Donation - Rescue Educational Initiative' + (who ? ' - ' + who : '')).slice(0, 140);
+}
+
+function renderPay(){
+  const a = Math.round(parseFloat(pay.amount.value) * 100) / 100;
+  const ok = a >= 1 && a <= 999999;
+  const ref = payReference();
+  document.getElementById('payRefShow').textContent = ref;
+  document.getElementById('payAmountShow').textContent = ok ? a.toFixed(2) : '—';
+  const n = Math.floor(a / 20);
+  document.getElementById('payStudents').textContent = ok && n >= 1 ? T[lang].pay_students.replace('{s}', studentsLabel(n)) : '';
+  document.querySelectorAll('#payChips button').forEach(c => {
+    const on = +c.dataset.v === a;
+    c.classList.toggle('bg-night', on); c.classList.toggle('text-white', on); c.classList.toggle('bg-sand', !on);
+  });
+  pay.qr.classList.toggle('hidden', !ok); pay.err.classList.toggle('hidden', ok);
+  if (!ok) return;
+  if (typeof qrcode === 'undefined') { pay.qr.innerHTML = ''; pay.err.classList.remove('hidden'); return; }
+  const q = qrcode(0, 'M');
+  q.addData(epcPayload(a, ref), 'Byte');
+  q.make();
+  pay.qr.innerHTML = q.createSvgTag({ cellSize: 6, margin: 2, scalable: true });
+}
+
+document.getElementById('payChips').innerHTML = [20,40,100,200,400,1000]
+  .map(v => `<button type="button" data-v="${v}" class="rounded-full bg-sand px-4 py-1.5 text-sm font-bold transition" dir="ltr">€${fmt(v)}</button>`).join('');
+document.querySelectorAll('#payChips button').forEach(c => c.addEventListener('click', () => { pay.amount.value = c.dataset.v; renderPay(); }));
+pay.amount.addEventListener('input', renderPay);
+pay.name.addEventListener('input', renderPay);
+
+function openPay(e){
+  if (e) e.preventDefault();
+  pay.amount.value = selected.a;   // start from the tier the visitor picked
+  renderPay();
+  pay.modal.classList.remove('hidden'); pay.modal.classList.add('flex');
+  document.body.style.overflow = 'hidden';
+}
+function closePay(){
+  pay.modal.classList.add('hidden'); pay.modal.classList.remove('flex');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.open-pay').forEach(b => b.addEventListener('click', openPay));
+document.getElementById('payClose').addEventListener('click', closePay);
+pay.modal.addEventListener('click', e => { if (e.target === pay.modal) closePay(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePay(); });
+
+document.getElementById('payCopy').addEventListener('click', () => document.getElementById('copyAll').click());
+
+document.getElementById('payDownload').addEventListener('click', () => {
+  const svgEl = pay.qr.querySelector('svg'); if (!svgEl) return;
+  const xml = new XMLSerializer().serializeToString(svgEl);
+  const img = new Image();
+  img.onload = () => {
+    const size = 800, c = document.createElement('canvas');
+    c.width = c.height = size;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, size, size);
+    ctx.drawImage(img, 0, 0, size, size);
+    const link = document.createElement('a');
+    link.download = `donation-qr-EUR${pay.amount.value}.png`;
+    link.href = c.toDataURL('image/png');
+    link.click();
+  };
+  img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(xml);
+});
+
+document.getElementById('shareBtn').addEventListener('click', () => {
+  const data = {title: document.title, text: T[lang].cta_p2, url: location.href};
+  if (navigator.share) navigator.share(data).catch(() => {});
+  else copyText(location.href).then(() => showToast(T[lang].link_copied));
+});
+
+const nav = document.getElementById('nav');
+const onScroll = () => nav.classList.toggle('nav-solid', window.scrollY > 60);
+window.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+const links = document.getElementById('navLinks');
+document.getElementById('menuBtn').addEventListener('click', () => { links.classList.toggle('hidden'); links.classList.toggle('flex'); });
+links.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  if (window.innerWidth < 1024) { links.classList.add('hidden'); links.classList.remove('flex'); }
+}));
+
+const lb = document.getElementById('lightbox');
+const closeLb = () => { lb.classList.add('hidden'); lb.classList.remove('flex'); };
+document.querySelectorAll('.g-item').forEach(f => f.addEventListener('click', () => {
+  lb.querySelector('img').src = f.dataset.full; lb.classList.remove('hidden'); lb.classList.add('flex');
+}));
+lb.addEventListener('click', closeLb);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
+
+/* reveal + counters */
+const io = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.12});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+const countIO = new IntersectionObserver(entries => entries.forEach(e => {
+  if (!e.isIntersecting) return;
+  const el = e.target, to = +el.dataset.to, start = performance.now(), dur = 1400;
+  const step = now => {
+    const p = Math.min((now - start) / dur, 1), eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(Math.round(to * eased));
+    if (p < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step); countIO.unobserve(el);
+}), {threshold:.5});
+document.querySelectorAll('.counter').forEach(el => countIO.observe(el));
+
+document.getElementById('year').textContent = new Date().getFullYear();
+applyLang();
+</script>
+</body>
+</html>
