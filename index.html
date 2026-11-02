@@ -8,10 +8,60 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.tailwindcss.com/3.4.16"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<!-- Loader styles are plain CSS so they work before Tailwind arrives -->
+<style>
+  html.is-loading, html.is-loading body { overflow: hidden; }
+  #loader { position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:28px;
+    background:radial-gradient(circle at 30% 20%, rgba(16,185,129,.25), transparent 50%), radial-gradient(circle at 75% 80%, rgba(198,244,50,.15), transparent 50%), #06110d;
+    color:#fff; font-family:'Plus Jakarta Sans','Cairo',system-ui,sans-serif; padding:24px; text-align:center; transition:opacity .6s ease, visibility .6s ease; }
+  #loader.done { opacity:0; visibility:hidden; }
+  #loader .ld-logo { position:relative; width:84px; height:84px; border-radius:50%; background:#c6f432; display:grid; place-items:center; }
+  #loader .ld-logo::before { content:""; position:absolute; inset:-10px; border-radius:50%; border:2px solid rgba(198,244,50,.25); border-top-color:#c6f432; animation:ld-spin 1s linear infinite; }
+  #loader .ld-title { font-weight:800; font-size:clamp(1.1rem,4vw,1.5rem); letter-spacing:-.01em; }
+  #loader .ld-sub { font-family:'Cairo',system-ui,sans-serif; color:rgba(255,255,255,.6); font-size:.95rem; margin-top:4px; }
+  #loader .ld-bar { width:min(280px,70vw); height:6px; border-radius:99px; background:rgba(255,255,255,.1); overflow:hidden; }
+  #loader .ld-fill { height:100%; width:0; border-radius:99px; background:linear-gradient(90deg,#10b981,#c6f432); transition:width .3s ease; }
+  #loader .ld-pct { font-size:.85rem; color:rgba(255,255,255,.55); font-variant-numeric:tabular-nums; margin-top:10px; }
+  @keyframes ld-spin { to { transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { #loader .ld-logo::before { animation-duration:3s; } }
+</style>
+<noscript><style>#loader{display:none!important}</style></noscript>
 <script>
-  tailwind.config = {
+  /* Page loader: tracks libraries, fonts and images, then reveals the page */
+  document.documentElement.classList.add('is-loading');
+  window.Loader = (function(){
+    const tasks = []; let total = 0, done = 0;
+    function paint(){
+      const fill = document.querySelector('#loader .ld-fill'), pct = document.querySelector('#loader .ld-pct');
+      const p = total ? Math.round(done / total * 100) : 0;
+      if (fill) fill.style.width = p + '%';
+      if (pct) pct.textContent = p + '%';
+    }
+    function track(promise){
+      total++; paint();
+      const p = Promise.resolve(promise).catch(() => {}).then(() => { done++; paint(); });
+      tasks.push(p); return p;
+    }
+    function script(src){
+      return new Promise(res => {
+        const s = document.createElement('script');
+        s.src = src; s.onload = res; s.onerror = res;
+        document.head.appendChild(s);
+      });
+    }
+    return { track, script, tasks, paint };
+  })();
+
+  Loader.track(Loader.script('https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'));
+  Loader.track(Loader.script('https://cdn.tailwindcss.com/3.4.16').then(() => {
+    if (!window.tailwind) return;
+    tailwind.config = TW_CONFIG;
+    // give Tailwind a moment to generate the styles before revealing the page
+    return new Promise(r => setTimeout(r, 120));
+  }));
+</script>
+<script>
+  var TW_CONFIG = {
     theme: {
       extend: {
         colors: {
@@ -42,6 +92,8 @@
   }
 </script>
 <style>
+  html, body { overflow-x: clip; }
+  img { max-width: 100%; }
   html[lang="ar"] body { font-family: 'Cairo', system-ui, sans-serif; }
   html[lang="ar"] .tracking-tight, html[lang="ar"] .tracking-tighter { letter-spacing: 0; }
   html[lang="ar"] .uppercase { letter-spacing: 0; }
@@ -60,6 +112,21 @@
 </style>
 </head>
 <body class="font-sans bg-sand text-night antialiased overflow-x-hidden">
+
+<!-- ================= LOADER ================= -->
+<div id="loader" role="status" aria-live="polite">
+  <div class="ld-logo">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#06110d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5Z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg>
+  </div>
+  <div>
+    <div class="ld-title">Rescue Educational Initiative</div>
+    <div class="ld-sub">مبادرة إنقاذ التعليمية</div>
+  </div>
+  <div>
+    <div class="ld-bar"><div class="ld-fill"></div></div>
+    <div class="ld-pct">0%</div>
+  </div>
+</div>
 
 <!-- ================= NAV (floating pill) ================= -->
 <header class="fixed top-4 inset-x-0 z-50 px-4">
@@ -119,7 +186,7 @@
     </div>
 
     <!-- Collage -->
-    <div class="relative h-[460px] sm:h-[540px]">
+    <div class="relative h-[380px] min-[400px]:h-[440px] sm:h-[540px]">
       <div class="absolute inset-y-0 start-0 w-[68%] rounded-[2rem] overflow-hidden ring-1 ring-white/10">
         <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM.jpeg" alt="Volunteer teacher explaining a lesson in Gaza" class="w-full h-full object-cover">
         <div class="absolute inset-0 bg-gradient-to-t from-night/70 via-transparent"></div>
@@ -130,8 +197,8 @@
       <div class="absolute top-6 end-0 w-[42%] h-[44%] rounded-[1.6rem] overflow-hidden ring-4 ring-night animate-float">
         <img src="image/stock/books-apple.jpg" alt="" class="w-full h-full object-cover">
       </div>
-      <div class="absolute bottom-0 end-0 w-[42%] rounded-[1.6rem] bg-lime text-night p-5 animate-float [animation-delay:-3s]">
-        <div class="text-4xl font-extrabold tracking-tight"><span class="counter" data-to="160">0</span></div>
+      <div class="absolute bottom-0 end-0 w-[44%] rounded-[1.6rem] bg-lime text-night p-4 sm:p-5 animate-float [animation-delay:-3s]">
+        <div class="text-3xl sm:text-4xl font-extrabold tracking-tight"><span class="counter" data-to="160">0</span></div>
         <div class="text-sm font-semibold leading-snug" data-i18n="stat_students">High school students</div>
         <div class="mt-3 h-1.5 rounded-full bg-night/15 overflow-hidden"><div class="h-full w-2/3 bg-night rounded-full"></div></div>
       </div>
@@ -139,11 +206,11 @@
   </div>
 
   <!-- stats row -->
-  <div class="relative max-w-6xl mx-auto px-4 mt-20 grid grid-cols-2 md:grid-cols-4 gap-px rounded-3xl overflow-hidden bg-white/10">
-    <div class="bg-night/90 p-6"><div class="text-3xl md:text-4xl font-extrabold"><span class="counter" data-to="160">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_students">High school students</div></div>
-    <div class="bg-night/90 p-6"><div class="text-3xl md:text-4xl font-extrabold"><span class="counter" data-to="4">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_months">Months — first phase</div></div>
-    <div class="bg-night/90 p-6"><div class="text-3xl md:text-4xl font-extrabold">$<span class="counter" data-to="20">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_cost">Per student / month</div></div>
-    <div class="bg-night/90 p-6"><div class="text-3xl md:text-4xl font-extrabold text-lime">$<span class="counter" data-to="12800">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_goal">Total funding goal</div></div>
+  <div class="relative max-w-6xl mx-auto px-4 mt-14 sm:mt-20 grid grid-cols-2 md:grid-cols-4 gap-px rounded-3xl overflow-hidden bg-white/10">
+    <div class="bg-night/90 p-6"><div class="text-2xl sm:text-3xl md:text-4xl font-extrabold"><span class="counter" data-to="160">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_students">High school students</div></div>
+    <div class="bg-night/90 p-6"><div class="text-2xl sm:text-3xl md:text-4xl font-extrabold"><span class="counter" data-to="4">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_months">Months — first phase</div></div>
+    <div class="bg-night/90 p-6"><div class="text-2xl sm:text-3xl md:text-4xl font-extrabold">$<span class="counter" data-to="20">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_cost">Per student / month</div></div>
+    <div class="bg-night/90 p-6"><div class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-lime">$<span class="counter" data-to="12800">0</span></div><div class="text-sm text-white/60 mt-1" data-i18n="stat_goal">Total funding goal</div></div>
   </div>
 </section>
 
@@ -153,12 +220,12 @@
 </div>
 
 <!-- ================= ABOUT (bento) ================= -->
-<section id="about" class="py-24 md:py-32">
+<section id="about" class="py-16 sm:py-24 md:py-32">
   <div class="max-w-6xl mx-auto px-4">
     <div class="reveal flex flex-wrap items-end justify-between gap-6 mb-12">
       <div>
         <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-brand-dark mb-4"><span class="w-6 h-px bg-brand-dark"></span><span data-i18n="about_eyebrow">About the Initiative</span></span>
-        <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight max-w-2xl" data-i18n="about_title"></h2>
+        <h2 class="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight max-w-2xl" data-i18n="about_title"></h2>
       </div>
     </div>
 
@@ -192,12 +259,12 @@
 </section>
 
 <!-- ================= PHASE ================= -->
-<section id="phase" class="py-24 md:py-32 bg-white rounded-t-[3rem]">
+<section id="phase" class="py-16 sm:py-24 md:py-32 bg-white rounded-t-[3rem]">
   <div class="max-w-6xl mx-auto px-4">
     <div class="grid lg:grid-cols-[1fr_1.4fr] gap-12 items-start">
       <div class="reveal lg:sticky lg:top-28">
         <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-brand-dark mb-4"><span class="w-6 h-px bg-brand-dark"></span><span data-i18n="phase_eyebrow">The First Phase</span></span>
-        <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5" data-i18n="phase_title"></h2>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-5" data-i18n="phase_title"></h2>
         <p class="text-lg text-muted mb-8" data-i18n="phase_lead"></p>
         <div class="rounded-[2rem] overflow-hidden relative h-64">
           <img src="image/stock/writing.jpg" alt="" class="w-full h-full object-cover">
@@ -221,34 +288,34 @@
 </section>
 
 <!-- ================= GALLERY ================= -->
-<section id="gallery" class="py-24 md:py-32 bg-white">
+<section id="gallery" class="py-16 sm:py-24 md:py-32 bg-white">
   <div class="max-w-6xl mx-auto px-4">
     <div class="reveal text-center max-w-2xl mx-auto mb-14">
       <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-brand-dark mb-4"><span data-i18n="gal_eyebrow">From Our Classrooms</span></span>
-      <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-4" data-i18n="gal_title"></h2>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight mb-4" data-i18n="gal_title"></h2>
       <p class="text-lg text-muted" data-i18n="gal_lead"></p>
     </div>
     <div class="grid grid-cols-2 md:grid-cols-4 auto-rows-[200px] md:auto-rows-[230px] gap-4">
       <figure class="g-item reveal group relative col-span-2 row-span-2 rounded-[2rem] overflow-hidden cursor-zoom-in" data-full="image/WhatsApp%20Image%202026-11-02%20at%202.17.43%20PM.jpeg">
-        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.43%20PM.jpeg" alt="Arabic lesson in a classroom in Gaza" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.43%20PM.jpeg" alt="Arabic lesson in a classroom in Gaza" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
         <figcaption class="absolute bottom-4 start-4 rounded-full bg-white/90 backdrop-blur px-4 py-2 text-sm font-bold" data-i18n="cap1"></figcaption>
       </figure>
       <figure class="g-item reveal group relative rounded-[2rem] overflow-hidden cursor-zoom-in" data-full="image/stock/books-stack.jpg">
-        <img src="image/stock/books-stack.jpg" alt="Stack of colourful books" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+        <img src="image/stock/books-stack.jpg" alt="Stack of colourful books" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
       </figure>
-      <div class="reveal rounded-[2rem] bg-lime p-6 flex flex-col justify-between">
+      <div class="reveal rounded-[2rem] bg-lime p-4 sm:p-6 flex flex-col justify-between">
         <svg width="34" height="34" viewBox="0 0 24 24" fill="#06110d"><path d="M10 7H6a3 3 0 0 0-3 3v4h5v5H3m18-12h-4a3 3 0 0 0-3 3v4h5v5h-5"/></svg>
-        <p class="font-extrabold text-lg leading-snug" data-i18n="gc1"></p>
+        <p class="font-extrabold text-base sm:text-lg leading-snug" data-i18n="gc1"></p>
       </div>
       <figure class="g-item reveal group relative row-span-2 rounded-[2rem] overflow-hidden cursor-zoom-in" data-full="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM.jpeg">
-        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM.jpeg" alt="Teacher explaining on the whiteboard" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
-        <figcaption class="absolute bottom-4 start-4 end-4 rounded-full bg-white/90 backdrop-blur px-4 py-2 text-sm font-bold" data-i18n="cap2"></figcaption>
+        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM.jpeg" alt="Teacher explaining on the whiteboard" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+        <figcaption class="absolute bottom-4 start-3 end-3 sm:start-4 sm:end-4 rounded-2xl bg-white/90 backdrop-blur px-4 py-2 text-sm font-bold" data-i18n="cap2"></figcaption>
       </figure>
       <figure class="g-item reveal group relative rounded-[2rem] overflow-hidden cursor-zoom-in" data-full="image/stock/open-book.jpg">
-        <img src="image/stock/open-book.jpg" alt="Open book and notebook" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+        <img src="image/stock/open-book.jpg" alt="Open book and notebook" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
       </figure>
       <figure class="g-item reveal group relative col-span-2 md:col-span-3 rounded-[2rem] overflow-hidden cursor-zoom-in" data-full="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM%20(1).jpeg">
-        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM%20(1).jpeg" alt="Students following a lesson" loading="lazy" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
+        <img src="image/WhatsApp%20Image%202026-11-02%20at%202.17.44%20PM%20(1).jpeg" alt="Students following a lesson" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
         <figcaption class="absolute bottom-4 start-4 rounded-full bg-white/90 backdrop-blur px-4 py-2 text-sm font-bold" data-i18n="cap3"></figcaption>
       </figure>
     </div>
@@ -261,19 +328,19 @@
 </div>
 
 <!-- ================= CONTRIBUTION ================= -->
-<section id="contribute" class="py-24 md:py-32">
+<section id="contribute" class="py-16 sm:py-24 md:py-32">
   <div class="max-w-6xl mx-auto px-4">
     <div class="reveal max-w-2xl mb-12">
       <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-brand-dark mb-4"><span class="w-6 h-px bg-brand-dark"></span><span data-i18n="con_eyebrow">Choose Your Contribution</span></span>
-      <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4" data-i18n="con_title"></h2>
+      <h2 class="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight mb-4" data-i18n="con_title"></h2>
       <p class="text-lg text-muted" data-i18n="con_lead"></p>
     </div>
 
-    <div id="tiers" class="grid grid-cols-2 lg:grid-cols-6 gap-3"></div>
+    <div id="tiers" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"></div>
 
-    <div class="reveal mt-4 rounded-[2rem] bg-white p-3 ps-7 flex flex-wrap items-center justify-between gap-4">
+    <div class="reveal mt-4 rounded-[2rem] bg-white p-4 sm:p-3 sm:ps-7 flex flex-wrap items-center justify-between gap-4">
       <div id="calcText" class="text-lg [&_b]:font-extrabold [&_b]:text-brand-dark py-2"></div>
-      <a href="#donate" class="open-pay inline-flex items-center gap-2 bg-night text-white font-bold rounded-full px-7 py-4 transition hover:bg-brand-dark">
+      <a href="#donate" class="open-pay w-full sm:w-auto justify-center inline-flex items-center gap-2 bg-night text-white font-bold rounded-full px-7 py-4 transition hover:bg-brand-dark">
         <span data-i18n="cta_donate_now">Donate Now</span>
         <svg class="rtl:rotate-180" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
@@ -284,7 +351,7 @@
         <div class="absolute -bottom-24 -end-24 w-72 h-72 rounded-full bg-brand/30 blur-3xl"></div>
         <div class="relative">
           <div class="text-sm font-semibold text-white/60 mb-3" data-i18n="goal_label"></div>
-          <div class="text-6xl md:text-8xl font-extrabold tracking-tighter text-gradient mb-6">$12,800</div>
+          <div class="text-5xl sm:text-6xl md:text-8xl font-extrabold tracking-tighter text-gradient mb-6">$12,800</div>
           <div class="flex flex-wrap items-center gap-2 text-sm font-bold mb-6">
             <span class="rounded-full bg-white/10 px-4 py-2" data-i18n="f1"></span><span class="text-white/40">×</span>
             <span class="rounded-full bg-white/10 px-4 py-2" data-i18n="f2"></span><span class="text-white/40">×</span>
@@ -303,13 +370,13 @@
 </section>
 
 <!-- ================= WHY ================= -->
-<section class="grain relative py-24 md:py-32 bg-night text-white overflow-hidden">
+<section class="grain relative py-16 sm:py-24 md:py-32 bg-night text-white overflow-hidden">
   <img src="image/stock/library-aisle.jpg" alt="" class="absolute inset-0 w-full h-full object-cover opacity-15">
   <div class="absolute inset-0 bg-gradient-to-b from-night via-night/80 to-night"></div>
   <div class="relative max-w-6xl mx-auto px-4">
     <div class="reveal max-w-3xl mb-14">
       <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-lime mb-4"><span class="w-6 h-px bg-lime"></span><span data-i18n="why_eyebrow">Why Does Your Support Matter?</span></span>
-      <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6" data-i18n-html="why_title"></h2>
+      <h2 class="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight mb-6" data-i18n-html="why_title"></h2>
       <p class="text-lg text-white/70" data-i18n="why_lead"></p>
     </div>
     <p class="reveal font-semibold text-white/80 mb-5" data-i18n="why_help"></p>
@@ -319,18 +386,18 @@
 </section>
 
 <!-- ================= DONATE ================= -->
-<section id="donate" class="py-24 md:py-32">
+<section id="donate" class="py-16 sm:py-24 md:py-32">
   <div class="max-w-6xl mx-auto px-4">
     <div class="reveal max-w-2xl mb-12">
       <span class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[.18em] text-brand-dark mb-4"><span class="w-6 h-px bg-brand-dark"></span><span data-i18n="don_eyebrow">How to Donate</span></span>
-      <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-4" data-i18n="don_title"></h2>
+      <h2 class="text-3xl sm:text-4xl md:text-6xl font-extrabold tracking-tight mb-4" data-i18n="don_title"></h2>
       <p class="text-lg text-muted" data-i18n="don_lead"></p>
     </div>
 
     <div class="grid lg:grid-cols-[1.25fr_1fr] gap-6 items-start">
       <!-- Bank card -->
       <div class="reveal">
-        <div class="relative rounded-[2rem] overflow-hidden text-white p-7 sm:p-9 bg-gradient-to-br from-[#0f2a20] via-night to-black shadow-[0_40px_80px_-30px_rgba(6,17,13,.7)]">
+        <div class="relative rounded-[2rem] overflow-hidden text-white p-5 sm:p-9 bg-gradient-to-br from-[#0f2a20] via-night to-black shadow-[0_40px_80px_-30px_rgba(6,17,13,.7)]">
           <div class="absolute -top-24 -end-24 w-72 h-72 rounded-full bg-brand/25 blur-3xl"></div>
           <div class="absolute bottom-0 inset-x-0 h-1.5 flex"><span class="flex-1 bg-black"></span><span class="flex-1 bg-[#fdda24]"></span><span class="flex-1 bg-[#ef3340]"></span></div>
 
@@ -350,7 +417,7 @@
           <div class="relative mb-8">
             <div class="text-xs uppercase tracking-[.2em] text-white/50 mb-2">IBAN</div>
             <div class="flex flex-wrap items-center gap-3">
-              <div class="text-2xl sm:text-3xl font-bold tracking-[.12em] font-mono" dir="ltr">BE34 6500 5510 2390</div>
+              <div class="text-lg min-[400px]:text-xl sm:text-3xl font-bold tracking-[.06em] sm:tracking-[.12em] font-mono break-words" dir="ltr">BE34 6500 5510 2390</div>
               <button class="copy-btn rounded-full bg-lime text-night px-4 py-1.5 text-sm font-bold transition" data-copy="BE34650055102390"><span data-i18n="copy">Copy</span></button>
             </div>
           </div>
@@ -391,9 +458,9 @@
 </section>
 
 <!-- ================= COMMITMENT ================= -->
-<section class="pb-24 md:pb-32">
-  <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-[1fr_1fr_1fr] gap-4">
-    <div class="reveal rounded-[2rem] bg-brand-dark text-white p-8 flex flex-col justify-between min-h-[260px]">
+<section class="pb-16 sm:pb-24 md:pb-32">
+  <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="reveal rounded-[2rem] bg-brand-dark text-white p-8 flex flex-col justify-between gap-6 min-h-[200px] md:col-span-2 lg:col-span-1 lg:min-h-[260px]">
       <span class="text-xs font-bold uppercase tracking-[.18em] text-lime" data-i18n="com_eyebrow"></span>
       <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight" data-i18n="com_title"></h2>
     </div>
@@ -410,11 +477,11 @@
 
 <!-- ================= CTA ================= -->
 <section class="px-4 pb-6">
-  <div class="reveal relative max-w-7xl mx-auto rounded-[2.5rem] overflow-hidden text-white text-center py-24 md:py-32 px-6">
+  <div class="reveal relative max-w-7xl mx-auto rounded-[2.5rem] overflow-hidden text-white text-center py-16 sm:py-16 sm:py-24 md:py-32 px-5 sm:px-6">
     <img src="image/stock/love-to-learn.jpg" alt="" class="absolute inset-0 w-full h-full object-cover">
     <div class="absolute inset-0 bg-gradient-to-br from-night/95 via-night/85 to-brand-dark/80"></div>
     <div class="relative max-w-3xl mx-auto">
-      <h2 class="text-4xl md:text-7xl font-extrabold tracking-tighter mb-6" data-i18n-html="cta_title"></h2>
+      <h2 class="text-[2.2rem] leading-tight sm:text-5xl md:text-7xl font-extrabold tracking-tighter mb-6" data-i18n-html="cta_title"></h2>
       <p class="text-lg text-white/75 mb-3" data-i18n="cta_p1"></p>
       <p class="text-xl font-bold text-lime my-6" data-i18n="cta_p2"></p>
       <p class="text-white/75 mb-3" data-i18n="cta_p3"></p>
@@ -900,7 +967,8 @@ document.querySelectorAll('.g-item').forEach(f => f.addEventListener('click', ()
 lb.addEventListener('click', closeLb);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLb(); });
 
-/* reveal + counters */
+/* reveal + counters (started once the loader is gone, so the intro animations are visible) */
+function startAnimations(){
 const io = new IntersectionObserver(entries => entries.forEach(e => {
   if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
 }), {threshold:.12});
@@ -917,9 +985,37 @@ const countIO = new IntersectionObserver(entries => entries.forEach(e => {
   requestAnimationFrame(step); countIO.unobserve(el);
 }), {threshold:.5});
 document.querySelectorAll('.counter').forEach(el => countIO.observe(el));
+}
 
 document.getElementById('year').textContent = new Date().getFullYear();
 applyLang();
+
+/* ---------- Finish loading: wait for fonts + every image, then hide the loader ---------- */
+if (document.fonts && document.fonts.ready) Loader.track(document.fonts.ready);
+document.querySelectorAll('img').forEach(img => {
+  const src = img.getAttribute('src');
+  if (!src) return;                       // e.g. empty lightbox image
+  if (img.complete) { Loader.track(Promise.resolve()); return; }
+  Loader.track(new Promise(res => {
+    img.addEventListener('load', res, { once: true });
+    img.addEventListener('error', res, { once: true });
+  }));
+});
+
+(function finishLoading(){
+  const loader = document.getElementById('loader');
+  let finished = false;
+  const finish = () => {
+    if (finished) return; finished = true;
+    loader.classList.add('done');
+    document.documentElement.classList.remove('is-loading');
+    setTimeout(() => loader.remove(), 700);
+    startAnimations();
+  };
+  // Never keep visitors stuck: reveal the page after 12s even on a very slow connection
+  const safety = new Promise(r => setTimeout(r, 12000));
+  Promise.race([Promise.all(Loader.tasks), safety]).then(() => setTimeout(finish, 250));
+})();
 </script>
 </body>
 </html>
