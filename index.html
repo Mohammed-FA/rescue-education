@@ -442,7 +442,7 @@
           <div class="relative flex items-start justify-between gap-4 mb-10">
             <div>
               <div class="text-xs uppercase tracking-[.2em] text-white/50 mb-1" data-i18n="bank_title"></div>
-              <div class="text-xl font-extrabold">Revolut Bank UAB</div>
+              <div class="text-xl font-extrabold">Wise</div>
               <div class="text-sm text-white/60 flex items-center gap-1.5 mt-0.5">
                 <svg width="18" height="12" viewBox="0 0 3 2" class="rounded-sm"><rect width="1" height="2" fill="#000"/><rect x="1" width="1" height="2" fill="#FDDA24"/><rect x="2" width="1" height="2" fill="#EF3340"/></svg>
                 <span data-i18n="b_country">Belgium · Belgian account</span>
@@ -455,12 +455,12 @@
           <div class="relative mb-8">
             <div class="text-xs uppercase tracking-[.2em] text-white/50 mb-2">IBAN</div>
             <div class="flex flex-wrap items-center gap-3">
-              <div class="text-lg min-[400px]:text-xl sm:text-3xl font-bold tracking-[.06em] sm:tracking-[.12em] font-mono break-words" dir="ltr">BE34 6500 5510 2390</div>
-              <button class="copy-btn rounded-full bg-lime text-night px-4 py-1.5 text-sm font-bold transition" data-copy="BE34650055102390"><span data-i18n="copy">Copy</span></button>
+              <div class="text-lg min-[400px]:text-xl sm:text-3xl font-bold tracking-[.06em] sm:tracking-[.12em] font-mono break-words" dir="ltr">BE88 9676 2647 2341</div>
+              <button class="copy-btn rounded-full bg-lime text-night px-4 py-1.5 text-sm font-bold transition" data-copy="BE88967626472341"><span data-i18n="copy">Copy</span></button>
             </div>
           </div>
 
-          <div id="bankRows" class="relative grid sm:grid-cols-3 gap-3 mb-4"></div>
+          <div id="bankRows" class="relative grid sm:grid-cols-2 gap-3 mb-4"></div>
         </div>
         <button type="button" class="open-pay mt-4 w-full rounded-full bg-lime text-night py-4 font-extrabold text-lg transition hover:scale-[1.01] flex items-center justify-center gap-2.5 shadow-[0_15px_30px_-12px_rgba(132,204,22,.6)]">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M14 20h.01M17 20h4v-3"/></svg>
@@ -572,9 +572,9 @@
         <input id="payName" type="text" maxlength="60" class="w-full rounded-2xl border-2 border-night/10 focus:border-brand px-4 py-3 outline-none" dir="ltr">
 
         <div class="mt-6 rounded-2xl bg-sand p-4 text-sm space-y-1.5" dir="ltr">
-          <div class="flex justify-between gap-3"><span class="text-muted">Beneficiary</span><b class="text-end">Abdelrahman Abusaman</b></div>
-          <div class="flex justify-between gap-3"><span class="text-muted">IBAN</span><b class="font-mono">BE34 6500 5510 2390</b></div>
-          <div class="flex justify-between gap-3"><span class="text-muted">BIC</span><b class="font-mono">REVOBEB2</b></div>
+          <div class="flex justify-between gap-3"><span class="text-muted">Beneficiary</span><b class="text-end">Mustafa shawlak</b></div>
+          <div class="flex justify-between gap-3"><span class="text-muted">IBAN</span><b class="font-mono">BE88 9676 2647 2341</b></div>
+          <div class="flex justify-between gap-3"><span class="text-muted">BIC</span><b class="font-mono">TRWIBEB1XXX</b></div>
           <div class="flex justify-between gap-3"><span class="text-muted">Reference</span><b id="payRefShow" class="text-end break-all"></b></div>
         </div>
       </div>
@@ -656,7 +656,7 @@ const T = {
     don_eyebrow:"How to Donate", don_title:"Bank transfer details",
     don_lead:"We welcome your contributions to support the Rescue Educational Initiative. Transfers go to our Belgian bank account below.",
     bank_title:"Bank Account Details", b_country:"Belgium · Belgian account",
-    b_name:"Account Holder", b_bic:"BIC / SWIFT", b_corr:"Correspondent BIC",
+    b_name:"Account Holder", b_bic:"BIC / SWIFT", b_addr:"Bank Address",
     copy:"Copy", copied:"Copied!", copy_all:"Copy all bank details", all_copied:"All bank details copied",
     instr_t:"Donation Instructions",
     instr:"Please use the verified bank details to make your contribution. After completing your transfer, you may contact our technical support team if you need assistance or further information.",
@@ -730,7 +730,7 @@ const T = {
     don_eyebrow:"كيف تتبرّع", don_title:"بيانات التحويل البنكي",
     don_lead:"نرحّب بمساهماتكم لدعم مبادرة إنقاذ التعليمية. يتم التحويل إلى حسابنا البنكي البلجيكي أدناه.",
     bank_title:"بيانات الحساب البنكي", b_country:"بلجيكا · حساب بنكي بلجيكي",
-    b_name:"صاحب الحساب", b_bic:"رمز BIC / SWIFT", b_corr:"BIC البنك المراسل",
+    b_name:"صاحب الحساب", b_bic:"رمز BIC / SWIFT", b_addr:"عنوان البنك",
     copy:"نسخ", copied:"تم النسخ!", copy_all:"نسخ كل بيانات البنك", all_copied:"تم نسخ كل بيانات البنك",
     instr_t:"تعليمات التبرّع",
     instr:"يرجى استخدام بيانات الحساب البنكي الموثّقة لتقديم مساهمتك. بعد إتمام التحويل، يمكنك التواصل مع فريق الدعم الفني إذا احتجت إلى مساعدة أو مزيد من المعلومات.",
@@ -760,11 +760,11 @@ const T = {
 
 /* ---------- Data ---------- */
 const BANK = {
-  holder: 'Abdelrahman Abusaman',
-  iban:   'BE34650055102390',
-  bic:    'REVOBEB2',
-  corr:   'CHASDEFX',
-  bank:   'Revolut Bank UAB (Belgium)',
+  holder:  'Mustafa shawlak',
+  iban:    'BE88967626472341',
+  bic:     'TRWIBEB1XXX',
+  bank:    'Wise',
+  address: 'Wise, Rue du Trône 100, 3rd floor, Brussels, 1050, Belgium',
 };
 
 const ICONS = {
@@ -804,9 +804,9 @@ document.getElementById('whyList').innerHTML = ['w1','w2','w3','w4','w5']
   .map(k => `<div class="reveal rounded-[1.5rem] bg-white/5 border border-white/10 backdrop-blur p-6 hover:bg-white/10 transition">${tick}<p class="text-white/85 font-medium" data-i18n="${k}"></p></div>`).join('');
 
 document.getElementById('bankRows').innerHTML = [
-  ['b_name', BANK.holder], ['b_bic', BANK.bic], ['b_corr', BANK.corr]
-].map(([k, v]) => `
-  <div class="rounded-2xl bg-white/5 border border-white/10 p-4">
+  ['b_name', BANK.holder], ['b_bic', BANK.bic], ['b_addr', BANK.address, true]
+].map(([k, v, wide]) => `
+  <div class="rounded-2xl bg-white/5 border border-white/10 p-4 ${wide ? 'sm:col-span-2' : ''}">
     <div class="text-[11px] uppercase tracking-[.15em] text-white/50 mb-1" data-i18n="${k}"></div>
     <div class="font-bold break-words mb-3" dir="ltr">${v}</div>
     <button class="copy-btn rounded-full bg-white/10 hover:bg-white/20 px-3 py-1 text-xs font-bold transition" data-copy="${v}"><span data-i18n="copy"></span></button>
@@ -889,8 +889,8 @@ document.getElementById('copyAll').addEventListener('click', () => {
     `Account Holder Name: ${BANK.holder}`,
     `IBAN: ${BANK.iban}`,
     `BIC/SWIFT Code: ${BANK.bic}`,
-    `Correspondent Bank BIC: ${BANK.corr}`,
     `Bank: ${BANK.bank}`,
+    `Bank Address: ${BANK.address}`,
   ].join('\n');
   copyText(text).then(() => showToast(T[lang].all_copied));
 });
